@@ -15,7 +15,7 @@ var mongoose = require('mongoose');
 var flash = require('express-flash');
 var expressValidator = require('express-validator');
 
-mongoose.connect('mongodb://localhost/reset');
+mongoose.connect('mongodb://shyam:A123456@ds237192.mlab.com:37192/authapp');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,22 +36,24 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
+app.use(
+	expressValidator({
+		errorFormatter: function(param, msg, value) {
+			var namespace = param.split('.'),
+				root = namespace.shift(),
+				formParam = root;
 
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
+			while (namespace.length) {
+				formParam += '[' + namespace.shift() + ']';
+			}
+			return {
+				param: formParam,
+				msg: msg,
+				value: value
+			};
+		}
+	})
+);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
